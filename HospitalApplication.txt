@@ -1,0 +1,13 @@
+Hospital Application
+Entities
+Admin
+Doctor
+Patient
+Pharmacists
+User
+Role
+Appointment
+Complaints
+Drugs
+Prescriptions
+Wallet
