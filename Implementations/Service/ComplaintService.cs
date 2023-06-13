@@ -72,14 +72,20 @@ namespace Hospital_App.Implementations.Service
             };
         }
 
-        public Task<ComplaintsResponse> GetAllComplaints(int id)
+        public async Task<ComplaintsResponse> GetAllComplaints()
         {
-            throw new NotImplementedException();
-        }
+            var complaint = await _complaintRepository.GetAllAsync();
+            return new ComplaintsResponse
+            {
+                Data = complaint.Select(x => new GetComplaintsDto
+                {
+                    Description = x.Description,
+                    PatientId = x.PatientId,
+                    Name = x.Patient.User.FirstName,
 
-        public Task<ComplaintsResponse> GetAllComplaints()
-        {
-            throw new NotImplementedException();
+                   
+                }).ToList()
+            };
         }
 
         public async Task<ComplaintsResponse> GetAllComplaintsByDateAdded(DateTime dateAdded)

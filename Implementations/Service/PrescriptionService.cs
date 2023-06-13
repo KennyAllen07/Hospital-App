@@ -1,7 +1,11 @@
-﻿using Hospital_App.Interface.IService;
+﻿using Hospital_App.Entities;
+using Hospital_App.Implementations.Repository;
+using Hospital_App.Interface.IService;
 using Hospital_App.Interfaces.IRepository;
 using Hospital_App.Models.DTOs;
 using Hospital_App.Models.DTOs.ResponseModels;
+using Microsoft.VisualBasic;
+using MimeKit.Encodings;
 
 namespace Hospital_App.Implementations.Service
 {
@@ -9,15 +13,46 @@ namespace Hospital_App.Implementations.Service
     {
         private readonly IPrescriptionsRepository _prescriptionRepository;
         private readonly IPatientRepository _patientRepository;
-        public PrescriptionService(IPatientRepository patientRepository, IPrescriptionsRepository prescriptionRepository)
+        private readonly IComplaintRepository _complaintRepository;
+        private readonly IDoctorRepository _doctorRepository;
+        public PrescriptionService(IPatientRepository patientRepository, IPrescriptionsRepository prescriptionRepository, IComplaintRepository complaintRepository, IDoctorRepository doctorRepository)
         {
             _patientRepository = patientRepository;
             _prescriptionRepository = prescriptionRepository;
+            _complaintRepository = complaintRepository;
+            _doctorRepository = doctorRepository;
         }
 
-        public Task<BaseResponse> AddPrescription(CreatePrescriptionsDto createPrescriptions)
+        public async Task<BaseResponse> AddPrescription(CreatePrescriptionsDto createPrescriptions, int DoctorId, int PatientId)
         {
-            throw new NotImplementedException();
+            var patient = await _complaintRepository.GetComplaintsByPatientId(PatientId);
+            var doctor = await _doctorRepository.GetAsync(DoctorId);
+           
+            
+
+            if (patient == null && doctor == null)
+            {
+                return new BaseResponse
+                {
+                    Message = "Can't Make A Prescription",
+                    Success = true,
+                };
+
+            }
+            var prescription = new Prescriptions
+            {
+                Diagnosis = createPrescriptions.Diagnosis,
+                Prescription = createPrescriptions.Prescription,
+                
+
+            };
+
+            var addPrescription = await _prescriptionRepository.CreateAsync(prescription);
+            return new BaseResponse
+            {
+                Message = "Prescription Created Successfully",
+                Success = true,
+            };
         }
 
         public async Task<BaseResponse> DeletePrescription(int Id)
@@ -43,17 +78,72 @@ namespace Hospital_App.Implementations.Service
 
         public async Task<BaseResponse> GetPrescription(int Id)
         {
-            throw new NotImplementedException();
+            var prescriptions = await _prescriptionRepository.GetAsync(x => x.Id == Id);
+            if (prescriptions == null)
+            {
+                return new BaseResponse
+                {
+                    Message = "Prescription Not Found",
+                    Success = false,
+                };
+            }
+            return new SinglePrescriptionsResponse
+            {
+                Data = new GetPrescriptionsDto()
+                {
+                    Id = prescriptions.Id,
+                    Diagnosis = prescriptions.Diagnosis,
+                    PatientId = prescriptions.PatientId,
+                    DoctorId = prescriptions.DoctorId,
+                    Prescription = prescriptions.Prescription,
+                    
+                },
+                Message = "Prescription Retrieved Successfully",
+                Success = true
+            };
         }
 
-        public Task<PrescriptionsResponse> GetPrescriptions()
+        public async Task<PrescriptionsResponse> GetPrescriptions()
         {
-            throw new NotImplementedException();
+            var prescription = await _prescriptionRepository.GetAllAsync();
+            return new PrescriptionsResponse
+            {
+                Data = prescription.Select(x => new GetPrescriptionsDto
+                {
+                    Id = x.Id,
+                    Diagnosis = x.Diagnosis,
+                    PatientId = x.PatientId,
+                    DoctorId = x.DoctorId,
+                    Prescription = x.Prescription,
+
+
+
+                }).ToList()
+            };
         }
 
-        public Task<BaseResponse> UpdatePrescription(UpdatePrescriptionsDto updatePrescriptions)
+        public async Task<BaseResponse> UpdatePrescription(UpdatePrescriptionsDto updatePrescriptions, int DoctorId, int id)
         {
-            throw new NotImplementedException();
+            var reqPresciption = await _prescriptionRepository.GetAsync(x => x.Id == id);
+            var doctor = await _doctorRepository.GetAsync(DoctorId);
+            if (reqPresciption == null && doctor == null || doctor == null || reqPresciption == null)
+            {
+                return new BaseResponse
+                {
+                    Message = "Prescription does not exist",
+                    Success = true,
+                };
+
+            }
+
+            reqPresciption.Prescription = updatePrescriptions.Prescription;
+            reqPresciption.Diagnosis = updatePrescriptions.Diagnosis;
+            var addPrescription = await _prescriptionRepository.UpdateAsync(reqPresciption);
+            return new BaseResponse
+            {
+                Message = "Prescription Updated Successfully",
+                Success = true,
+            };
         }
     }
 

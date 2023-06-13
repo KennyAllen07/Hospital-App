@@ -20,9 +20,9 @@ namespace Hospital_App.Models.DTOs
     {
         public int Id { get; set; }
         public int PatientId { get; set; }
-        public Patient Patient { get; set; }
+      
         public int DoctorId { get; set; }
-        public Doctor Doctor { get; set; }
+      
         public string Diagnosis { get; set; }
         public string Prescription { get; set; }
     }

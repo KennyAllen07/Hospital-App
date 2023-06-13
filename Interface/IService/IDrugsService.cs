@@ -5,7 +5,7 @@ namespace Hospital_App.Interface.IService
 {
     public interface IDrugsService
     {
-        Task<BaseResponse> AddDrug(CreateDrugsDto createDrug);
+        Task<BaseResponse> AddDrug(CreateDrugsDto createDrug, int userId);
         Task<BaseResponse> UpdateDrug(UpdateDrugsDto updateDrugs);
         Task<BaseResponse> DeleteDrug(int id);
         Task<BaseResponse> GetDrug(int id);
