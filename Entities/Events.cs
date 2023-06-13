@@ -1,6 +1,8 @@
-﻿namespace Hospital_App.Entities
+﻿using Hospital_App.Contracts;
+
+namespace Hospital_App.Entities
 {
-    public class Events
+    public class Events : AuditableEntity
     {
         public int DoctorId { get; set; }
         public Doctor Doctor { get; set; }

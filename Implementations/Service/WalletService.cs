@@ -28,7 +28,7 @@ namespace Hospital_App.Implementations.Service
                 };
             }
             wallet.Amount = updateWallet.Amount;
-            var creditWallet = await _walletRepository.UpdateAsync(wallet);
+            await _walletRepository.UpdateAsync(wallet);
             return new BaseResponse
             {
                 Message = "You've Successfully Credited your Wallet",
@@ -48,7 +48,7 @@ namespace Hospital_App.Implementations.Service
                 };
             }
             wallet.IsDeleted = true;
-            var deleteWallet = await _walletRepository.UpdateAsync(wallet);
+            await _walletRepository.UpdateAsync(wallet);
             return new BaseResponse
             {
                 Message = "Your Wallet was deleted",
@@ -72,7 +72,10 @@ namespace Hospital_App.Implementations.Service
                 Data = new GetWalletDto()
                 {
                     Amount= wallet.Amount,
-                    Id= Id
+                    Id= Id,
+                    FirstName = wallet.FirstName,
+                    LastName = wallet.LastName
+                    
 
                 }
             };

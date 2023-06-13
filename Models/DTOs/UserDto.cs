@@ -13,7 +13,7 @@ namespace Hospital_App.Models.DTOs
             public string Password { get; set; }
             public Gender Gender { get; set; }
             public DateTime DateOfBirth { get; set; }
-            public string? Picture { get; set; }
+            public IFormFile? Picture { get; set; }
             public string PhoneNumber { get; set; }
             public string NextOfKin { get; set; }
             public int PostalCode { get; set; }
@@ -37,7 +37,7 @@ namespace Hospital_App.Models.DTOs
         public string Password { get; set; }
         public Gender Gender { get; set; }
         public DateTime DateOfBirth { get; set; }
-        public string? Picture { get; set; }
+        public IFormFile? Picture { get; set; }
         public string PhoneNumber { get; set; }
         public string NextOfKin { get; set; }
         public int PostalCode { get; set; }

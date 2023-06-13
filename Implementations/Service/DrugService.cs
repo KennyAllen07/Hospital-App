@@ -24,7 +24,7 @@ namespace Hospital_App.Implementations.Service
         public async Task<BaseResponse> AddDrug(CreateDrugsDto createDrug, int UserId)
         {
             var user = await _userRepository.GetAsync(UserId);
-            var drug = await _drugRepository.GetAsync(x => x.Id == createDrug.Id);
+            
             if(user == null)
             {
                 return new BaseResponse()
@@ -33,14 +33,7 @@ namespace Hospital_App.Implementations.Service
                     Success = false
                 };
             }
-            if(drug != null)
-            {
-                return new BaseResponse()
-                {
-                    Message = "Drug Already Exists",
-                    Success = false
-                };
-            }
+           
             var drugs = new Drugs 
             {
                Name = createDrug.Name,
@@ -49,7 +42,7 @@ namespace Hospital_App.Implementations.Service
                Quantity = createDrug.Quantity,
 
             };
-            var addDrug = await _drugRepository.CreateAsync(drugs);
+            await _drugRepository.CreateAsync(drugs);
             return new BaseResponse()
             {
                 Message = "Drug Created Successfully",
@@ -72,7 +65,7 @@ namespace Hospital_App.Implementations.Service
 
             }
             drug.IsDeleted = true;
-            var deletedrug = await _drugRepository.DeleteAsync(drug);
+            await _drugRepository.UpdateAsync(drug);
             return new BaseResponse()
             { 
                 Message = "Drug was successfully deleted",
@@ -161,7 +154,7 @@ namespace Hospital_App.Implementations.Service
             drug.Name = updateDrugs.Name;
             drug.Description = updateDrugs.Description;
             drug.Price = updateDrugs.Price;
-            var updateDrug = await _drugRepository.UpdateAsync(drug);
+            await _drugRepository.UpdateAsync(drug);
             return new BaseResponse()
             {
                 Message = "Drug was updated successfully",

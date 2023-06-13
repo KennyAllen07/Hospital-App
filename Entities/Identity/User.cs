@@ -12,7 +12,7 @@ namespace Hospital_App.Entities.Identity
         public DateTime DateOfBirth { get; set; }
         public string NextOfKin { get; set; }
         public Address Address { get; set; }
-        public string? Picture { get; set; }
+        public string Picture { get; set; }
         public string PhoneNumber { get; set; }
         public Patient Patient { get; set; }
         public Admin Admin { get; set; }

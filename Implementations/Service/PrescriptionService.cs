@@ -47,7 +47,7 @@ namespace Hospital_App.Implementations.Service
 
             };
 
-            var addPrescription = await _prescriptionRepository.CreateAsync(prescription);
+            await _prescriptionRepository.CreateAsync(prescription);
             return new BaseResponse
             {
                 Message = "Prescription Created Successfully",
@@ -68,7 +68,7 @@ namespace Hospital_App.Implementations.Service
 
             }
             prescription.IsDeleted = true;
-            var prescriptions = await _prescriptionRepository.DeleteAsync(prescription);
+            await _prescriptionRepository.UpdateAsync(prescription);
             return new BaseResponse
             {
                 Message = "Your Prescription has been deleted",
@@ -138,7 +138,7 @@ namespace Hospital_App.Implementations.Service
 
             reqPresciption.Prescription = updatePrescriptions.Prescription;
             reqPresciption.Diagnosis = updatePrescriptions.Diagnosis;
-            var addPrescription = await _prescriptionRepository.UpdateAsync(reqPresciption);
+            await _prescriptionRepository.UpdateAsync(reqPresciption);
             return new BaseResponse
             {
                 Message = "Prescription Updated Successfully",

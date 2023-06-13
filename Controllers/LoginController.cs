@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Hospital_App.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("Hospital/[controller]")]
     [ApiController]
     public class LoginController : ControllerBase
     {
-        
+      
 
     }
 }

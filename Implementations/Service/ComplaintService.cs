@@ -43,7 +43,7 @@ namespace Hospital_App.Implementations.Service
 
             };
 
-            var addComplaint = await _complaintRepository.CreateAsync(complaint);
+            await _complaintRepository.CreateAsync(complaint);
             return new BaseResponse
             {
                 Message = "Complaint Created Successfully",
@@ -119,7 +119,7 @@ namespace Hospital_App.Implementations.Service
             }
            
             reqComplaint.Description = updateComplaints.Description;
-            var addComplaint = await _complaintRepository.UpdateAsync(reqComplaint);
+            await _complaintRepository.UpdateAsync(reqComplaint);
             return new BaseResponse
             {
                 Message = "Complaint Updated Successfully",

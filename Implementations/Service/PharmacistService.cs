@@ -29,6 +29,26 @@ namespace Hospital_App.Implementations.Service
 
         public async Task<BaseResponse> AddPharmacist(CreatePharmacistDto createPharmacist)
         {
+            var path = Path.Combine(Directory.GetCurrentDirectory() + "..\\Images\\Pharmacist\\");
+            if (!System.IO.Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            var imagePath = "";
+            if (createPharmacist.CreateUserDto.Picture != null)
+            {
+                var fileName = Path.GetFileNameWithoutExtension(createPharmacist.CreateUserDto.Picture.FileName);
+                var filePath = Path.Combine(path, fileName);
+                var extension = Path.GetExtension(createPharmacist.CreateUserDto.Picture.FileName);
+                if (!System.IO.Directory.Exists(filePath))
+                {
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await createPharmacist.CreateUserDto.Picture.CopyToAsync(stream);
+                    }
+                    imagePath = fileName;
+                }
+            }
             var pharmacist = await _pharmacistRepository.GetAsync(a => a.User.Email == createPharmacist.CreateUserDto.Email);
             if (pharmacist != null)
             {
@@ -44,7 +64,7 @@ namespace Hospital_App.Implementations.Service
                 LastName = createPharmacist.CreateUserDto.LastName,
                 Email = createPharmacist.CreateUserDto.Email,
                 Password = createPharmacist.CreateUserDto.Password,
-                Picture = createPharmacist.CreateUserDto.Picture,
+                Picture = imagePath,
                 Gender = createPharmacist.CreateUserDto.Gender,
                 DateOfBirth = createPharmacist.CreateUserDto.DateOfBirth,
                 PhoneNumber = createPharmacist.CreateUserDto.PhoneNumber,
@@ -83,7 +103,7 @@ namespace Hospital_App.Implementations.Service
                 UserId = adduser.Id,
                 User = adduser,
             };
-            var addPharmacist = await _pharmacistRepository.CreateAsync(pharmacists);
+            await _pharmacistRepository.CreateAsync(pharmacists);
             return new BaseResponse
             {
                 Message = "Pharmacist Added Successfully",
@@ -92,12 +112,32 @@ namespace Hospital_App.Implementations.Service
         }
         public async Task<BaseResponse> UpdatePharmacist(int id, UpdatePharmacistDto updatePharmacist)
         {
+            var path = Path.Combine(Directory.GetCurrentDirectory() + "..\\Images\\Pharmacist\\");
+            if (!System.IO.Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            var imagePath = "";
+            if (updatePharmacist.UpdateUserDto.Picture != null)
+            {
+                var fileName = Path.GetFileNameWithoutExtension(updatePharmacist.UpdateUserDto.Picture.FileName);
+                var filePath = Path.Combine(path, fileName);
+                var extension = Path.GetExtension(updatePharmacist.UpdateUserDto.Picture.FileName);
+                if (!System.IO.Directory.Exists(filePath))
+                {
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await updatePharmacist.UpdateUserDto.Picture.CopyToAsync(stream);
+                    }
+                    imagePath = fileName;
+                }
+            }
             var pharmacist = await _pharmacistRepository.GetAsync(id);
             if (pharmacist == null)
             {
                 return new BaseResponse
                 {
-                    Message = "Admin Not Found",
+                    Message = "Pharmacist Not Found",
                     Success = false,
                 };
             }
@@ -105,7 +145,7 @@ namespace Hospital_App.Implementations.Service
             pharmacist.User.LastName = updatePharmacist.UpdateUserDto.LastName;
             pharmacist.User.Email = updatePharmacist.UpdateUserDto.Email;
             pharmacist.User.Password = updatePharmacist.UpdateUserDto.Password;
-            pharmacist.User.Picture = updatePharmacist.UpdateUserDto.Picture;
+            pharmacist.User.Picture = imagePath;
             pharmacist.User.Gender = updatePharmacist.UpdateUserDto.Gender;
             pharmacist.User.DateOfBirth = updatePharmacist.UpdateUserDto.DateOfBirth;
             pharmacist.User.PhoneNumber = updatePharmacist.UpdateUserDto.PhoneNumber;

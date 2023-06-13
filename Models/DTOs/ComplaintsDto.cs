@@ -12,7 +12,6 @@ namespace Hospital_App.Models.DTOs
     }
     public class UpdateComplaintsDto
     {
-        public string Name { get; set; }
         public int PatientId { get; set; }
         public string Description { get; set; }
 

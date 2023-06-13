@@ -6,9 +6,9 @@ namespace Hospital_App.Interface.IService
     public interface IBioDataService
     {
         Task<BaseResponse> AddBiodata(CreateBioDataDto createBioData);
-        Task<BaseResponse> UpdateBioData(UpdateBioDataDto updateAppointment);
+        Task<BaseResponse> UpdateBioData(UpdateBioDataDto updateBioData, int id);
         Task<BaseResponse> DeleteBioData(int id);
-        Task<BioDataResponse> GetBioDataByPatientId(int id);
+        Task<BaseResponse> GetBioDataByPatientId(int Patientid);
         Task<BioDataResponse> GetAllBioData();
     }
 }

@@ -30,6 +30,26 @@ namespace Hospital_App.Implementations.Service
 
         public async Task<BaseResponse> AddAdmin(CreateAdminDto createAdmin)
         {
+            var path = Path.Combine(Directory.GetCurrentDirectory() + "..\\Images\\Admin\\");
+            if(!System.IO.Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            var imagePath = "";
+            if(createAdmin.CreateUserDto.Picture != null)
+            {
+                var fileName = Path.GetFileNameWithoutExtension(createAdmin.CreateUserDto.Picture.FileName);
+                var filePath = Path.Combine(path, fileName);
+                var extension = Path.GetExtension(createAdmin.CreateUserDto.Picture.FileName);
+                if(!System.IO.Directory.Exists(filePath))
+                {
+                    using(var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await createAdmin.CreateUserDto.Picture.CopyToAsync(stream);
+                    }
+                    imagePath = fileName;
+                }
+            }
             var admin = await _adminRepository.GetAsync(a => a.User.Email == createAdmin.CreateUserDto.Email);
             if (admin != null)
             {
@@ -45,20 +65,6 @@ namespace Hospital_App.Implementations.Service
                 LastName = createAdmin.CreateUserDto.LastName,
                 Email = createAdmin.CreateUserDto.Email,
                 Password = createAdmin.CreateUserDto.Password,
-                Picture = createAdmin.CreateUserDto.Picture,
-                Gender = createAdmin.CreateUserDto.Gender,
-                DateOfBirth = createAdmin.CreateUserDto.DateOfBirth,
-                PhoneNumber = createAdmin.CreateUserDto.PhoneNumber,
-                NextOfKin = createAdmin.CreateUserDto.NextOfKin,
-                Address = new Address
-                {
-                    NumberLine = createAdmin.CreateUserDto.NumberLine,
-                    Street = createAdmin.CreateUserDto.Street,
-                    City = createAdmin.CreateUserDto.City,
-                    State = createAdmin.CreateUserDto.State,
-                    Country = createAdmin.CreateUserDto.Country,
-                    PostalCode = createAdmin.CreateUserDto.PostalCode,
-                }
             };
             var adduser = await _userRepository.CreateAsync(user);
             var role = await _roleRepository.GetAsync(x => x.Name.Equals("Admin"));
@@ -84,7 +90,7 @@ namespace Hospital_App.Implementations.Service
                 UserId = adduser.Id,
                 User = adduser,
             };
-            var addAdmin = await _adminRepository.CreateAsync(admins);
+            await _adminRepository.CreateAsync(admins);
             return new BaseResponse
             {
                 Message = "Admin Added Successfully",
@@ -93,6 +99,26 @@ namespace Hospital_App.Implementations.Service
         }
         public async Task<BaseResponse> UpdateAdmin(int id, UpdateAdminDto updateAdmin)
         {
+            var path = Path.Combine(Directory.GetCurrentDirectory() + "..\\Images\\Admin\\");
+            if (!System.IO.Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            var imagePath = "";
+            if (updateAdmin.UpdateUserDto.Picture != null)
+            {
+                var fileName = Path.GetFileNameWithoutExtension(updateAdmin.UpdateUserDto.Picture.FileName);
+                var filePath = Path.Combine(path, fileName);
+                var extension = Path.GetExtension(updateAdmin.UpdateUserDto.Picture.FileName);
+                if (!System.IO.Directory.Exists(filePath))
+                {
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await updateAdmin.UpdateUserDto.Picture.CopyToAsync(stream);
+                    }
+                    imagePath = fileName;
+                }
+            }
             var admin = await _adminRepository.GetAsync(id);
             if (admin == null)
             {
@@ -106,7 +132,7 @@ namespace Hospital_App.Implementations.Service
             admin.User.LastName = updateAdmin.UpdateUserDto.LastName;
             admin.User.Email = updateAdmin.UpdateUserDto.Email;
             admin.User.Password = updateAdmin.UpdateUserDto.Password;
-            admin.User.Picture = updateAdmin.UpdateUserDto.Picture;
+            admin.User.Picture = imagePath;
             admin.User.Gender = updateAdmin.UpdateUserDto.Gender;
             admin.User.DateOfBirth = updateAdmin.UpdateUserDto.DateOfBirth;
             admin.User.PhoneNumber = updateAdmin.UpdateUserDto.PhoneNumber;

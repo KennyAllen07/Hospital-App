@@ -24,7 +24,7 @@ namespace Hospital_App.Context
         public DbSet<Prescriptions> Prescriptions { get; set; }
         public DbSet<Wallet> Wallets { get; set; }
         public DbSet<Posts> Posts { get; set; }
-        public DbSet<Order> Orders { get; set; }
+        public DbSet<Events> Events { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Cart> Carts { get; set; }

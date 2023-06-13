@@ -29,6 +29,26 @@ namespace Hospital_App.Implementations.Service
 
         public async Task<BaseResponse> AddDoctor(CreateDoctorDto createDoctor)
         {
+            var path = Path.Combine(Directory.GetCurrentDirectory() + "..\\Images\\Doctor\\");
+            if (!System.IO.Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            var imagePath = "";
+            if (createDoctor.CreateUserDto.Picture != null)
+            {
+                var fileName = Path.GetFileNameWithoutExtension(createDoctor.CreateUserDto.Picture.FileName);
+                var filePath = Path.Combine(path, fileName);
+                var extension = Path.GetExtension(createDoctor.CreateUserDto.Picture.FileName);
+                if (!System.IO.Directory.Exists(filePath))
+                {
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await createDoctor.CreateUserDto.Picture.CopyToAsync(stream);
+                    }
+                    imagePath = fileName;
+                }
+            }
             var doctor = await _doctorRepository.GetAsync(a => a.User.Email == createDoctor.CreateUserDto.Email);
             if (doctor != null)
             {
@@ -44,7 +64,7 @@ namespace Hospital_App.Implementations.Service
                 LastName = createDoctor.CreateUserDto.LastName,
                 Email = createDoctor.CreateUserDto.Email,
                 Password = createDoctor.CreateUserDto.Password,
-                Picture = createDoctor.CreateUserDto.Picture,
+                Picture = imagePath,
                 Gender = createDoctor.CreateUserDto.Gender,
                 DateOfBirth = createDoctor.CreateUserDto.DateOfBirth,
                 PhoneNumber = createDoctor.CreateUserDto.PhoneNumber,
@@ -83,7 +103,7 @@ namespace Hospital_App.Implementations.Service
                 UserId = adduser.Id,
                 User = adduser,
             };
-            var addDoctor = await _doctorRepository.CreateAsync(doctors);
+            await _doctorRepository.CreateAsync(doctors);
             return new BaseResponse
             {
                 Message = "Doctor Added Successfully",
@@ -92,6 +112,26 @@ namespace Hospital_App.Implementations.Service
         }
         public async Task<BaseResponse> UpdateDoctor(int id, UpdateDoctorDto updateDoctor)
         {
+            var path = Path.Combine(Directory.GetCurrentDirectory() + "..\\Images\\Doctor\\");
+            if (!System.IO.Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            var imagePath = "";
+            if (updateDoctor.UpdateUserDto.Picture != null)
+            {
+                var fileName = Path.GetFileNameWithoutExtension(updateDoctor.UpdateUserDto.Picture.FileName);
+                var filePath = Path.Combine(path, fileName);
+                var extension = Path.GetExtension(updateDoctor.UpdateUserDto.Picture.FileName);
+                if (!System.IO.Directory.Exists(filePath))
+                {
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await updateDoctor.UpdateUserDto.Picture.CopyToAsync(stream);
+                    }
+                    imagePath = fileName;
+                }
+            }
             var doctor = await _doctorRepository.GetAsync(id);
             if (doctor == null)
             {
@@ -105,7 +145,7 @@ namespace Hospital_App.Implementations.Service
                 doctor.User.LastName = updateDoctor.UpdateUserDto.LastName;
                 doctor.User.Email = updateDoctor.UpdateUserDto.Email;
                 doctor.User.Password = updateDoctor.UpdateUserDto.Password;
-                doctor.User.Picture = updateDoctor.UpdateUserDto.Picture;
+                doctor.User.Picture = imagePath;
                 doctor.User.Gender = updateDoctor.UpdateUserDto.Gender;
                 doctor.User.DateOfBirth = updateDoctor.UpdateUserDto.DateOfBirth;
                 doctor.User.PhoneNumber = updateDoctor.UpdateUserDto.PhoneNumber;

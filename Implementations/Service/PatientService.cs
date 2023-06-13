@@ -33,12 +33,32 @@ namespace Hospital_App.Implementations.Service
 
         public async Task<BaseResponse> AddPatient(CreatePatientDto createPatient)
         {
+            var path = Path.Combine(Directory.GetCurrentDirectory() + "..\\Images\\Patient\\");
+            if (!System.IO.Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            var imagePath = "";
+            if (createPatient.CreateUserDto.Picture != null)
+            {
+                var fileName = Path.GetFileNameWithoutExtension(createPatient.CreateUserDto.Picture.FileName);
+                var filePath = Path.Combine(path, fileName);
+                var extension = Path.GetExtension(createPatient.CreateUserDto.Picture.FileName);
+                if (!System.IO.Directory.Exists(filePath))
+                {
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await createPatient.CreateUserDto.Picture.CopyToAsync(stream);
+                    }
+                    imagePath = fileName;
+                }
+            }
             var patient = await _patientRepository.GetAsync(a => a.User.Email == createPatient.CreateUserDto.Email);
             if (patient != null)
             {
                 return new BaseResponse()
                 {
-                    Message = "Doctor Already Exist",
+                    Message = "Patient Already Exist",
                     Success = false,
                 };
             }
@@ -48,7 +68,7 @@ namespace Hospital_App.Implementations.Service
                 LastName = createPatient.CreateUserDto.LastName,
                 Email = createPatient.CreateUserDto.Email,
                 Password = createPatient.CreateUserDto.Password,
-                Picture = createPatient.CreateUserDto.Picture,
+                Picture = imagePath,
                 Gender = createPatient.CreateUserDto.Gender,
                 DateOfBirth = createPatient.CreateUserDto.DateOfBirth,
                 PhoneNumber = createPatient.CreateUserDto.PhoneNumber,
@@ -101,7 +121,7 @@ namespace Hospital_App.Implementations.Service
                 PIN = addPatient.Wallet.PIN
 
             };
-            var addWallet = await _walletRepository.CreateAsync(wallet);
+            await _walletRepository.CreateAsync(wallet);
             return new BaseResponse
             {
                 Message = "Patient Added Successfully",
@@ -111,6 +131,26 @@ namespace Hospital_App.Implementations.Service
         }
         public async Task<BaseResponse> UpdatePatient(int id, UpdatePatientDto updatePatient)
         {
+            var path = Path.Combine(Directory.GetCurrentDirectory() + "..\\Images\\Patient\\");
+            if (!System.IO.Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            var imagePath = "";
+            if (updatePatient.UpdateUserDto.Picture != null)
+            {
+                var fileName = Path.GetFileNameWithoutExtension(updatePatient.UpdateUserDto.Picture.FileName);
+                var filePath = Path.Combine(path, fileName);
+                var extension = Path.GetExtension(updatePatient.UpdateUserDto.Picture.FileName);
+                if (!System.IO.Directory.Exists(filePath))
+                {
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await updatePatient.UpdateUserDto.Picture.CopyToAsync(stream);
+                    }
+                    imagePath = fileName;
+                }
+            }
             var patient = await _patientRepository.GetAsync(id);
             if (patient == null)
             {
@@ -124,7 +164,7 @@ namespace Hospital_App.Implementations.Service
             patient.User.LastName = updatePatient.UpdateUserDto.LastName;
             patient.User.Email = updatePatient.UpdateUserDto.Email;
             patient.User.Password = updatePatient.UpdateUserDto.Password;
-            patient.User.Picture = updatePatient.UpdateUserDto.Picture;
+            patient.User.Picture = imagePath;
             patient.User.Gender = updatePatient.UpdateUserDto.Gender;
             patient.User.DateOfBirth = updatePatient.UpdateUserDto.DateOfBirth;
             patient.User.PhoneNumber = updatePatient.UpdateUserDto.PhoneNumber;

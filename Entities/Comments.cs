@@ -10,7 +10,6 @@ namespace Hospital_App.Entities
         public int UserId { get; set; }
         public User User { get; set; }
         public string Comments { get; set; }  
-
-        public DateTime Date = DateTime.Now.ToUniversalTime();
+        public DateTime Date { get; set; }
     }
 }

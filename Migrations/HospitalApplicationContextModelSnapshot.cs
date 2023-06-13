@@ -167,6 +167,10 @@ namespace Hospital_App.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<string>("BloodType")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
@@ -178,6 +182,10 @@ namespace Hospital_App.Migrations
 
                     b.Property<DateTime?>("DeletedOn")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Genotype")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<double>("Height")
                         .HasColumnType("double");
@@ -194,8 +202,8 @@ namespace Hospital_App.Migrations
                     b.Property<int>("PatientId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Weight")
-                        .HasColumnType("int");
+                    b.Property<double>("Weight")
+                        .HasColumnType("double");
 
                     b.HasKey("Id");
 
@@ -206,6 +214,9 @@ namespace Hospital_App.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("AddToCart")
                         .HasColumnType("int");
 
                     b.Property<int>("CreatedBy")
@@ -220,8 +231,14 @@ namespace Hospital_App.Migrations
                     b.Property<DateTime?>("DeletedOn")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<int>("DrugId")
+                        .HasColumnType("int");
+
                     b.Property<bool?>("IsDeleted")
                         .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("IsPaid")
+                        .HasColumnType("int");
 
                     b.Property<int>("LastModifiedBy")
                         .HasColumnType("int");
@@ -231,6 +248,16 @@ namespace Hospital_App.Migrations
 
                     b.Property<int>("PatientId")
                         .HasColumnType("int");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("double");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ReferenceId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -251,6 +278,9 @@ namespace Hospital_App.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("Date")
                         .HasColumnType("datetime(6)");
 
                     b.Property<int?>("DeletedBy")
@@ -309,6 +339,18 @@ namespace Hospital_App.Migrations
                     b.Property<int>("DoctorId")
                         .HasColumnType("int");
 
+                    b.Property<string>("DrFirstname")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("DrLastname")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Firstname")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<bool?>("IsDeleted")
                         .HasColumnType("tinyint(1)");
 
@@ -317,6 +359,10 @@ namespace Hospital_App.Migrations
 
                     b.Property<DateTime?>("LastModifiedOn")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Lastname")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<int>("PatientId")
                         .HasColumnType("int");
@@ -411,6 +457,9 @@ namespace Hospital_App.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(65,30)");
 
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
@@ -419,6 +468,58 @@ namespace Hospital_App.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Drugs");
+                });
+
+            modelBuilder.Entity("Hospital_App.Entities.Events", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int?>("DeletedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("DoctorId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EventDetails")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("LastModifiedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("LastModifiedOn")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Poster")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DoctorId");
+
+                    b.ToTable("Events");
                 });
 
             modelBuilder.Entity("Hospital_App.Entities.Identity.Role", b =>
@@ -522,6 +623,7 @@ namespace Hospital_App.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("Picture")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
@@ -571,60 +673,6 @@ namespace Hospital_App.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserRoles");
-                });
-
-            modelBuilder.Entity("Hospital_App.Entities.Order", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CartId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int?>("DeletedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("DrugId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DrugsId")
-                        .HasColumnType("int");
-
-                    b.Property<bool?>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<int>("LastModifiedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("LastModifiedOn")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("OrderSecretId")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("PatientId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CartId");
-
-                    b.HasIndex("DrugsId");
-
-                    b.HasIndex("PatientId");
-
-                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("Hospital_App.Entities.Patient", b =>
@@ -743,9 +791,6 @@ namespace Hospital_App.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("DoctorId")
-                        .HasColumnType("int");
-
                     b.Property<bool?>("IsDeleted")
                         .HasColumnType("tinyint(1)");
 
@@ -766,9 +811,12 @@ namespace Hospital_App.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("DoctorId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Posts");
                 });
@@ -834,6 +882,9 @@ namespace Hospital_App.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<double>("Amount")
+                        .HasColumnType("double");
+
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
@@ -846,12 +897,6 @@ namespace Hospital_App.Migrations
                     b.Property<DateTime?>("DeletedOn")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("DrugId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DrugsId")
-                        .HasColumnType("int");
-
                     b.Property<bool?>("IsDeleted")
                         .HasColumnType("tinyint(1)");
 
@@ -861,24 +906,27 @@ namespace Hospital_App.Migrations
                     b.Property<DateTime?>("LastModifiedOn")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
                     b.Property<int>("PatientId")
                         .HasColumnType("int");
+
+                    b.Property<string>("ReferenceNo")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<double>("ShippingFees")
+                        .HasColumnType("double");
 
                     b.Property<string>("TransactionDescription")
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<double>("TransactionFees")
+                        .HasColumnType("double");
+
                     b.Property<int>("WalletId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DrugsId");
-
-                    b.HasIndex("OrderId");
 
                     b.HasIndex("PatientId");
 
@@ -1046,6 +1094,17 @@ namespace Hospital_App.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Hospital_App.Entities.Events", b =>
+                {
+                    b.HasOne("Hospital_App.Entities.Doctor", "Doctor")
+                        .WithMany()
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Doctor");
+                });
+
             modelBuilder.Entity("Hospital_App.Entities.Identity.User", b =>
                 {
                     b.HasOne("Hospital_App.Entities.Address", "Address")
@@ -1074,29 +1133,6 @@ namespace Hospital_App.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Hospital_App.Entities.Order", b =>
-                {
-                    b.HasOne("Hospital_App.Entities.Cart", null)
-                        .WithMany("Order")
-                        .HasForeignKey("CartId");
-
-                    b.HasOne("Hospital_App.Entities.Drugs", "Drugs")
-                        .WithMany()
-                        .HasForeignKey("DrugsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Hospital_App.Entities.Patient", "Patient")
-                        .WithMany()
-                        .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Drugs");
-
-                    b.Navigation("Patient");
                 });
 
             modelBuilder.Entity("Hospital_App.Entities.Patient", b =>
@@ -1147,13 +1183,13 @@ namespace Hospital_App.Migrations
 
             modelBuilder.Entity("Hospital_App.Entities.Posts", b =>
                 {
-                    b.HasOne("Hospital_App.Entities.Doctor", "Doctor")
+                    b.HasOne("Hospital_App.Entities.Identity.User", "User")
                         .WithMany()
-                        .HasForeignKey("DoctorId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Doctor");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Hospital_App.Entities.Prescriptions", b =>
@@ -1185,18 +1221,6 @@ namespace Hospital_App.Migrations
 
             modelBuilder.Entity("Hospital_App.Entities.Transaction", b =>
                 {
-                    b.HasOne("Hospital_App.Entities.Drugs", "Drugs")
-                        .WithMany()
-                        .HasForeignKey("DrugsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Hospital_App.Entities.Order", "Order")
-                        .WithMany()
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Hospital_App.Entities.Patient", "Patient")
                         .WithMany()
                         .HasForeignKey("PatientId")
@@ -1209,18 +1233,9 @@ namespace Hospital_App.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Drugs");
-
-                    b.Navigation("Order");
-
                     b.Navigation("Patient");
 
                     b.Navigation("Wallet");
-                });
-
-            modelBuilder.Entity("Hospital_App.Entities.Cart", b =>
-                {
-                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("Hospital_App.Entities.Identity.Role", b =>
